@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SP24MVCDonham.Data;
 
@@ -11,9 +12,11 @@ using SP24MVCDonham.Data;
 namespace SP24MVCDonham.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240215170144_AddedAirline")]
+    partial class AddedAirline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,31 +247,6 @@ namespace SP24MVCDonham.Data.Migrations
                     b.ToTable("Airlines");
                 });
 
-            modelBuilder.Entity("SP24ClassLibraryDonham.Plane", b =>
-                {
-                    b.Property<int>("PlaneID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlaneID"));
-
-                    b.Property<int>("AirlineID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PlaneID");
-
-                    b.HasIndex("AirlineID");
-
-                    b.ToTable("Planes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -318,17 +296,6 @@ namespace SP24MVCDonham.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Plane", b =>
-                {
-                    b.HasOne("SP24ClassLibraryDonham.Airline", "Airline")
-                        .WithMany()
-                        .HasForeignKey("AirlineID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Airline");
                 });
 #pragma warning restore 612, 618
         }
