@@ -26,6 +26,8 @@ namespace SP24ClassLibraryDonham
         [ForeignKey(nameof(AirlineID))]
         public Airline Airline { get; set; }
 
+        public List<Flight> Flights { get; set; } = new List<Flight>();
+
         public Plane(string model, int capacity, int airlineID)
         {
             this.Model = model;
