@@ -30,7 +30,7 @@ namespace SP24ClassLibraryDonham
         public decimal Price { get; set; }
 
         [Required]
-        public FlightStatus FlightStatus { get; set; } = FlightStatus.Planned
+        public FlightStatus FlightStatus { get; set; } = FlightStatus.Planned;
 
         //Foreign Key
         [Required]
@@ -38,13 +38,27 @@ namespace SP24ClassLibraryDonham
         [ForeignKey(nameof(PlaneID))]
         public Plane Plane { get; set; }
 
+        //DepartureAirport
+        [Required]
+        public int DepartureAirportID { get; set; }
+        [ForeignKey(nameof(DepartureAirportID))]
+        public Airport DepartureAirport { get; set; }
+
+        //Arrival Airport
+        [Required]
+        public int ArrivalAirportID { get; set; }
+        [ForeignKey(nameof(ArrivalAirportID))]
+        public Airport ArrivalAirport { get; set; }
+
         //Parameterized
-        public Flight(DateTime departure, DateTime arrival, decimal price, FlightStatus status)
+        public Flight(DateTime departure, DateTime arrival, decimal price, int departureAirportID, int arrivalAirportID, int planeID)
         {
             this.DepartureDateTime = departure;
             this.EstimatedArrivalDateTime = arrival;
             this.Price = price;
-            this.FlightStatus = FlightStatus.Planned;
+            this.DepartureAirportID = departureAirportID;
+            this.ArrivalAirportID = arrivalAirportID;
+            this.PlaneID = planeID;
         }
         //Default
         public Flight()
