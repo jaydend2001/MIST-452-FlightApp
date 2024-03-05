@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SP24MVCDonham.Data;
 
@@ -11,9 +12,11 @@ using SP24MVCDonham.Data;
 namespace SP24MVCDonham.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240215170144_AddedAirline")]
+    partial class AddedAirline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,11 +89,6 @@ namespace SP24MVCDonham.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -142,10 +140,6 @@ namespace SP24MVCDonham.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -253,130 +247,6 @@ namespace SP24MVCDonham.Data.Migrations
                     b.ToTable("Airlines");
                 });
 
-            modelBuilder.Entity("SP24ClassLibraryDonham.Airport", b =>
-                {
-                    b.Property<int>("AirportID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AirportID"));
-
-                    b.Property<string>("Abbreviation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AirportName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfGates")
-                        .HasColumnType("int");
-
-                    b.HasKey("AirportID");
-
-                    b.ToTable("Airports");
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Flight", b =>
-                {
-                    b.Property<int>("FlightID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FlightID"));
-
-                    b.Property<int>("ArrivalAirportID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DepartureAirportID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DepartureDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("EstimatedArrivalDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FlightStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PlaneID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("FlightID");
-
-                    b.HasIndex("ArrivalAirportID");
-
-                    b.HasIndex("DepartureAirportID");
-
-                    b.HasIndex("PlaneID");
-
-                    b.ToTable("Flights");
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Plane", b =>
-                {
-                    b.Property<int>("PlaneID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlaneID"));
-
-                    b.Property<int>("AirlineID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Capacity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PlaneID");
-
-                    b.HasIndex("AirlineID");
-
-                    b.ToTable("Planes");
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.AppUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("AppUser");
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Employee", b =>
-                {
-                    b.HasBaseType("SP24ClassLibraryDonham.AppUser");
-
-                    b.Property<string>("JobTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SSN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasDiscriminator().HasValue("Employee");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -426,49 +296,6 @@ namespace SP24MVCDonham.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Flight", b =>
-                {
-                    b.HasOne("SP24ClassLibraryDonham.Airport", "ArrivalAirport")
-                        .WithMany()
-                        .HasForeignKey("ArrivalAirportID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SP24ClassLibraryDonham.Airport", "DepartureAirport")
-                        .WithMany()
-                        .HasForeignKey("DepartureAirportID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SP24ClassLibraryDonham.Plane", "Plane")
-                        .WithMany("Flights")
-                        .HasForeignKey("PlaneID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ArrivalAirport");
-
-                    b.Navigation("DepartureAirport");
-
-                    b.Navigation("Plane");
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Plane", b =>
-                {
-                    b.HasOne("SP24ClassLibraryDonham.Airline", "Airline")
-                        .WithMany()
-                        .HasForeignKey("AirlineID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Airline");
-                });
-
-            modelBuilder.Entity("SP24ClassLibraryDonham.Plane", b =>
-                {
-                    b.Navigation("Flights");
                 });
 #pragma warning restore 612, 618
         }
