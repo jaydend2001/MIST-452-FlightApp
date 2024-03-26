@@ -48,13 +48,13 @@ namespace SP24MVCDonham.Data.Migrations
                         column: x => x.ArrivalAirportID,
                         principalTable: "Airports",
                         principalColumn: "AirportID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Flights_Airports_DepartureAirportID",
                         column: x => x.DepartureAirportID,
                         principalTable: "Airports",
                         principalColumn: "AirportID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Flights_Planes_PlaneID",
                         column: x => x.PlaneID,
