@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Data;
+using SP24MVCDonham.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireCo
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IAirlineRepo, AirlineRepo>();
 
 var app = builder.Build();
 

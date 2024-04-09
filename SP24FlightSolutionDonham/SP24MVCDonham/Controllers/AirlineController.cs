@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Data;
+using SP24MVCDonham.Models;
 
 namespace SP24MVCDonham.Controllers
 {
@@ -9,10 +10,19 @@ namespace SP24MVCDonham.Controllers
         //Dependency Injection
         //Injecting my database through the constructor
         //Controller (class) depends on my database
-        private ApplicationDbContext database;
-        public AirlineController(ApplicationDbContext dbContext)
+
+        /*  private ApplicationDbContext database;
+          public AirlineController(ApplicationDbContext dbContext)
+          {
+              this.database = dbContext;
+          }*/
+
+        //Dependency Inversion
+        //Controller (class) depends on interface
+        private IAirlineRepo iAirlineRepo;
+        public AirlineController(IAirlineRepo airlineRepo)
         {
-            this.database = dbContext;
+            this.iAirlineRepo = airlineRepo;
         }
 
         //List all Airlines
@@ -22,7 +32,10 @@ namespace SP24MVCDonham.Controllers
         {
             //Get all airlines out of DB
             //access my database
-            List<Airline> airlines = this.database.Airlines.ToList();
+            //List<Airline> airlines = this.database.Airlines.ToList();
+
+            //return View(model)
+            List<Airline> airlines = this.iAirlineRepo.ListAllAirlines();
             return View(airlines);
         }
     }
