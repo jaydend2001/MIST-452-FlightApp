@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Airline>
+@{
+    ViewData["Title"] = "ListAllAirlines";
+}
+
+<h1>ListAllAirlines</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Airline ID</th>
+            <th>Airline Name</th>
+            <th>Stock Ticker</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Airline eachAirline in Model)
+        {
+            <tr>
+                <td>@eachAirline.AirlineID</td>
+                <td>@eachAirline.AirlineName</td>
+                <td>@eachAirline.StockTicker</td>
+            </tr>
+        }
+    </tbody>
+</table>

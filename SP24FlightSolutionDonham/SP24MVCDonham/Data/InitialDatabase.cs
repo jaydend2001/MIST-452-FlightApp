@@ -77,10 +77,10 @@ namespace SP24MVCDonham.Data
                 IdentityRole role = new IdentityRole("Administrator");
                 roleManager.CreateAsync(role).Wait();
 
-                IdentityRole role = new IdentityRole("Customer");
+                role = new IdentityRole("Customer");
                 roleManager.CreateAsync(role).Wait();
 
-                IdentityRole role = new IdentityRole("Employee");
+                role = new IdentityRole("Employee");
                 roleManager.CreateAsync(role).Wait();
             }
 
