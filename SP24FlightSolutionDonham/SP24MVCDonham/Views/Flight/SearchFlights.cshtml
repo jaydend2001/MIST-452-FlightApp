@@ -1,7 +1,85 @@
-﻿
+﻿@model SearchFlightsViewModel
 @{
-    ViewData["Title"] = "SearchFlights";
+    ViewData["Title"] = "Search Flights";
 }
 
-<h1>SearchFlights</h1>
+<h1>Search Flights</h1>
 
+<form asp-controller="Flight" asp-action="SearchFlights" method="post">
+    <div class="row"></div>
+        <div class="col"-md>
+        <div class="form-group">
+            <label class="control-label">Departure Airport</label>
+            <select class="form-control" asp-for="DepartureAirportID" asp-items="ViewBag.AllAirports" />
+            <option value=null>None Selected</option>
+            </select>
+        </div>
+        </div>
+        <div class="col-md-3">
+        <div class="form-group">
+            <label class="control-label">Arrival Airport</label>
+            <select class="form-control" asp-for="ArrivalAirportID" asp-items="ViewBag.AllAirports" />
+            <option value=null>None Selected</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Departure Airport</label>
+        <select class="form-control" asp-for="DepartureAirportID" asp-items="ViewBag.AllAirports"/>
+          <option value=null>None Selected</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Arrival Airport</label>
+        <select class="form-control" asp-for="ArrivalAirportID" asp-items="ViewBag.AllAirlines"/>
+        <option value=null>None Selected</option>
+        </select>
+    </div>
+    <br />
+    <div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+@if(Model.SearchResult != null)
+{
+    @if (Model.SearchResult.Any())
+    {
+        <br />
+        <hr />
+        <br />
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>FlightID</th>
+                    <th>Flight Status</th>
+                    <th>Airline</th>
+                    <th>Departure Airport</th>
+                    <th>Arrival Airport</th>
+                    <th>Departure Date Time</th>
+                    <th>Estimated Arrival Date Time</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(Flight flight in Model.SearchResult)
+                {
+                    <tr>
+                        <td>@flight.FlightID</td>
+                        <td>@flight.FlightStatus</td>
+                        <td>@flight.Plane.Airline.AirlineName</td>
+                        <td>@flight.DepartureAirport.AirportName</td>
+                        <td>@flight.ArrivalAirport.AirportName</td>
+                        <td>@flight.DepartureDateTime.</td>
+                        <td>@flight.EstimatedArrivalDateTime</td>
+                        <td>@flight.Price</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>The search returned no results!</p>
+    }
+}

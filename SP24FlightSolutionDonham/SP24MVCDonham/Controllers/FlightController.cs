@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Models;
 using SP24MVCDonham.ViewModels;
@@ -9,10 +10,14 @@ namespace SP24MVCDonham.Controllers
     {
 
         private IFlightRepo iFlightRepo;
+        private IAirportRepo iAirportRepo;
+        private IAirlineRepo iAirlineRepo
 
-        public FlightController(IFlightRepo flightRepo)
+        public FlightController(IFlightRepo flightRepo, IAirportRepo airportRepo, IAirlineRepo airlineRepo)
         {
             this.iFlightRepo = flightRepo;
+            this.iAirportRepo = airportRepo;
+            this.iAirlineRepo = airlineRepo;
         }
 
         //METHOD SIGNATURE
@@ -22,12 +27,21 @@ namespace SP24MVCDonham.Controllers
         public IActionResult SearchFlights()
         {
             SearchFlightsViewModel viewModel = new SearchFlightsViewModel();
+            List<Airport> airports = this.iAirportRepo.ListAllAirports();
+
+            //BAG - Data structures
+            ViewData["AllAirports"] = new SelectList(airports, "AirportID", "AirportName");
+
+            CreateDropDownLists();
+
             return View(viewModel);
         }
         //SEARCH BUTTON
         [HttpPost]
         public IActionResult SearchFlights(SearchFlightsViewModel viewModel)//Search Inputs
         {
+            CreateDropDownLists();
+
             //Get all flights
             List<Flight> flights = this.iFlightRepo.ListAllFlights();
 
@@ -43,9 +57,27 @@ namespace SP24MVCDonham.Controllers
                 flights = flights.Where(f => f.ArrivalAirportID == viewModel.ArrivalAirportID).ToList();
             }
 
+            //if user search by airline
+            if(viewModel.AirlineID != null)
+            {
+                flights = flights.Where(f => f.Plane.AirlineID == viewModel.AirlineID).ToList();
+            }
+
             //return result to user
             viewModel.SearchResult = flights;
             return View(viewModel);
+        }
+
+        public void CreateDropDownLists()
+        {
+            List<Airport> airports = this.iAirportRepo.ListAllAirports();
+
+            //BAG - Data structures
+            ViewData["AllAirprots"] = new SelectList(airports, "AirportID", "AirportName");
+
+            List<Airline> airlines = this.iAirlineRepo.ListAllAirlines();
+
+            ViewData["AllAirlines"] = new SelectList(airlines, "AirlineID", "AirlineName");
         }
     }
 }

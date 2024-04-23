@@ -2,11 +2,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Data;
+using SP24MVCDonham.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString
+    ("DefaultConnection") ?? throw new InvalidOperationException
+    ("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString,
     sqlOptionsBuilder => sqlOptionsBuilder.EnableRetryOnFailure()));
@@ -15,6 +18,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+//builder.Services.AddTransient<IAirlineRepo, AirlineRepo>();
+builder.Services.AddTransient<IFlightRepo, FlightRepo>();
+builder.Services.AddTransient<IAirportRepo, AirportRepo>();
 
 var app = builder.Build();
 
