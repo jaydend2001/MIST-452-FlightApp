@@ -28,7 +28,7 @@ namespace SP24TestDonham
         {
             //AAA Approach
             //Arrange - Setup
-            List<Airline> airlines = CreateMockAirlines()
+            List<Airline> airlines = CreateMockAirlines();
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns
                 (airlines);
 

@@ -11,7 +11,7 @@ namespace SP24MVCDonham.Controllers
 
         private IFlightRepo iFlightRepo;
         private IAirportRepo iAirportRepo;
-        private IAirlineRepo iAirlineRepo
+        private IAirlineRepo iAirlineRepo;
 
         public FlightController(IFlightRepo flightRepo, IAirportRepo airportRepo, IAirlineRepo airlineRepo)
         {
@@ -61,6 +61,25 @@ namespace SP24MVCDonham.Controllers
             if(viewModel.AirlineID != null)
             {
                 flights = flights.Where(f => f.Plane.AirlineID == viewModel.AirlineID).ToList();
+            }
+
+            //if user search by start date
+            if (viewModel.StartDate != null)
+            {
+                flights = flights.Where(f => f.DepartureDateTime >= viewModel.StartDate).ToList();
+            }
+
+            //if user search by end date
+            if (viewModel.EndDate != null)
+            {
+                flights = flights.Where(f => f.DepartureDateTime <= viewModel.EndDate).ToList();
+            }
+
+            //if user search by airline name
+            if (!String.IsNullOrEmpty(viewModel.AirlineName))
+            {
+                flights = flights.Where(f => f.Plane.Airline.AirlineName.ToLower().Contains(viewModel.AirlineName.Trim()
+                    .ToLower())).ToList();
             }
 
             //return result to user
