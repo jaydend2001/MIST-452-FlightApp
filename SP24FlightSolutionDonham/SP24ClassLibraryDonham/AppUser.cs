@@ -32,9 +32,11 @@ namespace SP24ClassLibraryDonham
 
         //Int  when perform mathematical functions
         //String else
-        [Required]
-        [DataType(DataType.PhoneNumber)]
-        public string PhoneNumber {  get; set; }
+       // [Required]
+       // [DataType(DataType.PhoneNumber)]
+        //public string PhoneNumber {  get; set; }
+
+        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 
         public AppUser(string first, string last, DateOnly dob, string phone, string email, string password)
         {

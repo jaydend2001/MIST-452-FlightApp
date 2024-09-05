@@ -40,7 +40,7 @@ namespace SP24MVCDonham.Data
             if (!database.Planes.Any())
             {
                     Airline southwest = database.Airlines.Where(a => a.AirlineName == "Southwest").FirstOrDefault();
-                    Plane plane = new Plane("747", 200, southwest.AirlineID);
+                    Plane plane = new Plane("747", 2, southwest.AirlineID);
                     database.Planes.Add(plane);
 
                     plane = new Plane("747", 250, southwest.AirlineID);
@@ -61,7 +61,7 @@ namespace SP24MVCDonham.Data
                     Flight flight = new Flight(new DateTime(2024, 03, 01, 10, 00, 00), new DateTime(2024, 03, 01, 10, 30, 00), 100.00m, plane.PlaneID, departure.AirportID, arrival.AirportID);
                     database.Flights.Add(flight);
 
-                    flight = new Flight(new DateTime(2024, 04, 01, 10, 30, 00), new DateTime(2024, 04, 01, 10, 30, 00), 100.00m, plane.PlaneID, arrival.AirportID, departure.AirportID);
+                    flight = new Flight(new DateTime(2024, 04, 01, 10, 30, 00), new DateTime(2024, 04, 01, 10, 30, 00), 200.00m, plane.PlaneID, arrival.AirportID, departure.AirportID);
                     database.Flights.Add(flight);
 
                     database.SaveChanges();
@@ -97,6 +97,20 @@ namespace SP24MVCDonham.Data
                 user = new AppUser("Test", "Customer", new DateOnly(2000, 01, 01), "1234567890", "Test.Customer1@test.com", "Test.Customer1");
                 userManager.CreateAsync(user).Wait();
                 userManager.AddToRoleAsync(user, "Customer").Wait();
+            }
+
+            if(!database.Tickets.Any())
+            {
+                Flight flight = database.Flights.FirstOrDefault();
+                AppUser user = database.AppUsers.FirstOrDefault();
+                Ticket ticket = new Ticket(flight.FlightID, user.Id, 100m);
+                database.Tickets.Add(ticket);
+
+                user = database.AppUsers.Where(a => a.Email == "Test.Employee1@test.com").FirstOrDefault();
+                ticket = new Ticket(flight.FlightID, user.Id, 100m);
+                database.Tickets.Add(ticket);
+
+                database.SaveChanges();
             }
         }
     }

@@ -12,6 +12,8 @@ namespace SP24MVCDonham.ViewModels
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string? AirlineName { get; set; }
+        public bool AvaiableFlights { get; set; }
+        public FlightStatus? FlightStatus { get; set; }
 
         //Result
         public List<Flight> SearchResult {  get; set; }

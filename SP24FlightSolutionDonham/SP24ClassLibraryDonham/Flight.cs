@@ -49,6 +49,8 @@ namespace SP24ClassLibraryDonham
         public int ArrivalAirportID { get; set; }
         [ForeignKey(nameof(ArrivalAirportID))]
         public Airport ArrivalAirport { get; set; }
+        
+        public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 
         //Parameterized
         public Flight(DateTime departure, DateTime arrival, decimal price, int departureAirportID, int arrivalAirportID, int planeID)

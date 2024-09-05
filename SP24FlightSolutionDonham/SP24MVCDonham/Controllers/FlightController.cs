@@ -27,11 +27,7 @@ namespace SP24MVCDonham.Controllers
         public IActionResult SearchFlights()
         {
             SearchFlightsViewModel viewModel = new SearchFlightsViewModel();
-            List<Airport> airports = this.iAirportRepo.ListAllAirports();
-
-            //BAG - Data structures
-            ViewData["AllAirports"] = new SelectList(airports, "AirportID", "AirportName");
-
+            viewModel.AvailableFlights = true;
             CreateDropDownLists();
 
             return View(viewModel);
@@ -63,6 +59,12 @@ namespace SP24MVCDonham.Controllers
                 flights = flights.Where(f => f.Plane.AirlineID == viewModel.AirlineID).ToList();
             }
 
+            //if user search by flight status
+            if (viewModel.FlightStatus != null)
+            {
+                flights = flights.Where(f => f.FlightStatus == viewModel.FlightStatus).ToList();
+            }
+
             //if user search by start date
             if (viewModel.StartDate != null)
             {
@@ -80,6 +82,12 @@ namespace SP24MVCDonham.Controllers
             {
                 flights = flights.Where(f => f.Plane.Airline.AirlineName.ToLower().Contains(viewModel.AirlineName.Trim()
                     .ToLower())).ToList();
+            }
+
+            if (viewModel.AvailableFlights)
+            {
+                flights = flights.Where(flight => flight.Plane.Capacity > 
+                flight.Tickets.Count).ToList();
             }
 
             //return result to user

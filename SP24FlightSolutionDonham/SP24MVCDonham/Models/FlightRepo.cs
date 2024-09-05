@@ -16,7 +16,7 @@ namespace SP24MVCDonham.Models
         public List<Flight> ListAllFlights()
         {
             return this.database.Flights.Include(f => f.ArrivalAirport).Include(f => 
-            f.DepartureAirport).Include(f => f.Plane).ThenInclude(p => p.Airline).ToList();
+            f.DepartureAirport).Include(f => f.Plane).ThenInclude(p => p.Airline).Include(f => f.Tickets).ToList();
         }
     }
 }

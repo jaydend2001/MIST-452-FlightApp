@@ -13,6 +13,7 @@ namespace SP24MVCDonham.Data
         public DbSet<Airport> Airports { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
