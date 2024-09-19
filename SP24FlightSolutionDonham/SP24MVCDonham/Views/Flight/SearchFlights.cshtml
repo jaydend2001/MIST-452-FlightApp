@@ -23,16 +23,15 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label class="control-label">Airline</label>
-                <select class="form-control" asp-for="AirlineID" 
-                asp-items="ViewBag.AllAirlines">
+                <select class="form-control" asp-for="AirlineID" asp-items="ViewBag.AllAirlines">
                     <option value=null>None Selected</option>
                 </select>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label class="control-label">Flight Status</label>
                 <select class="form-control" asp-for="FlightStatus" 
@@ -43,26 +42,21 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="form-group">
                 <label class="control-label">Search Start Date</label>
                 <input class="form-control" asp-for="StartDate" />
              </div>
         </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
              <div class="form-group">
-            <label class="control-label">Search End Date</label>
-            <input class="form-control" asp-for="EndDate" />
+                <label class="control-label">Search End Date</label>
+                <input class="form-control" asp-for="EndDate" />
               </div>
           </div>
-         @*  <div class="col-md-3">
-              <div class="form-group">
-                  <label class="control-label">Airline Name</label>
-                  <input class="form-control" asp-for="AirlineName" />
-              </div>
-          </div> *@
     </div>
+
     <br />
     <div class="row">
         <div class="col-md-1">
@@ -101,6 +95,10 @@
                         <th>Tickets Sold</th>
                     }
                     <th>Seats Available</th>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <th>Edit</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -121,6 +119,16 @@
                             <td>@flight.Tickets.Count</td>
                         }
                         <td>@(flight.Plane.Capacity-flight.Tickets.Count)</td>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <td>
+                                <a class="btn btn-warning" asp-controller="Flight"
+                                    asp-action="EditFlight" 
+                                    asp-route-flightID="@flight.FlightID">
+                                    Edit Flight
+                                </a>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>
