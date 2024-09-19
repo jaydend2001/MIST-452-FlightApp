@@ -24,6 +24,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IFlightRepo, FlightRepo>();
 builder.Services.AddTransient<IAirportRepo, AirportRepo>();
 builder.Services.AddTransient<IAirlineRepo, AirlineRepo>();
+builder.Services.AddTransient<IPlaneRepo, PlaneRepo>();
 
 var app = builder.Build();
 
