@@ -13,12 +13,17 @@ namespace SP24MVCDonham.Controllers
         private IAirportRepo iAirportRepo;
         private IAirlineRepo iAirlineRepo;
         private IPlaneRepo iPlaneRepo;
-        public FlightController(IFlightRepo flightRepo, IAirportRepo airportRepo, IAirlineRepo airlineRepo, IPlaneRepo planeRepo)
+        private IAppUserRepo iAppUserRepo;
+
+        public FlightController(IFlightRepo flightRepo, IAirportRepo airportRepo, 
+            IAirlineRepo airlineRepo, IPlaneRepo planeRepo, IAppUserRepo 
+            appUserRepo)
         {
             this.iFlightRepo = flightRepo;
             this.iAirportRepo = airportRepo;
             this.iAirlineRepo = airlineRepo;
             this.iPlaneRepo = planeRepo;
+            this.iAppUserRepo = appUserRepo;
         }
 
         //METHOD SIGNATURE
@@ -120,8 +125,19 @@ namespace SP24MVCDonham.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult AddFlight(FlightViewModel viewModel)
         {
-            if(ModelState.IsValid) 
+            List<Flight> existingFlights = this.iFlightRepo.ListAllFlights();
+            //Duplicate Check based on PlaneID and DepartureDateTime
+            if(existingFlights.Where(f => f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime ==
+            viewModel.DepartureDateTime.Value).Any())
             {
+                ModelState.AddModelError("Duplicate", "This record appears to be a duplicate! There is already a " +
+                  "flight on this plane that is leaving at this time. Flight ID: " + existingFlights.Where(f =>
+                  f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime ==
+                  viewModel.DepartureDateTime.Value).FirstOrDefault().FlightID);
+            }
+            if (ModelState.IsValid) 
+            {
+                string appUserID = this.iAppUserRepo.GetAppUserID();
                 //ADD
                 //Create new object
                 Flight flight = new Flight(viewModel.DepartureDateTime.Value, viewModel.ArrivalDateTime.Value, 
@@ -141,6 +157,7 @@ namespace SP24MVCDonham.Controllers
         [HttpGet]
         [Authorize(Roles = "Administrator")]
         public IActionResult EditFlight(int flightID)
+
         {
             //Find Existing Record
             Flight flight = this.iFlightRepo.FindFlight
@@ -162,6 +179,16 @@ namespace SP24MVCDonham.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult EditFlight(FlightViewModel viewModel)
         {
+            List<Flight> existingFlights = this.iFlightRepo.ListAllFlights();
+            //Duplicate Check based on PlaneID and DepartureDateTime
+            if (existingFlights.Where(f => f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime ==
+            viewModel.DepartureDateTime.Value && f.FlightID != viewModel.FlightID).Any())
+            {
+                ModelState.AddModelError("Duplicate", "This record appears to be a duplicate! There is already a " +
+                  "flight on this plane that is leaving at this time. Flight ID: " + existingFlights.Where(f =>
+                  f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime ==
+                  viewModel.DepartureDateTime.Value && f.FlightID != viewModel.FlightID).FirstOrDefault().FlightID);
+            }
             if (ModelState.IsValid)
             {
                 //Find Existing Record
@@ -185,6 +212,71 @@ namespace SP24MVCDonham.Controllers
                 CreateDropDownLists();
                 return View();
             }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult ConfirmDeleteFlight(int flightID)
+        {
+            //Find Existing Record
+            Flight flight = this.iFlightRepo.FindFlight (flightID);
+
+            FlightViewModel viewModel = new FlightViewModel();
+            CreateDropDownLists();
+
+            viewModel.DepartureAirportID = flight.DepartureAirportID;
+            viewModel.ArrivalAirportID = flight.ArrivalAirportID;
+            viewModel.DepartureDateTime = flight.DepartureDateTime;
+            viewModel.ArrivalDateTime = flight.EstimatedArrivalDateTime;
+            viewModel.Price = flight.Price;
+            viewModel.PlaneID = flight.PlaneID;
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult DeleteFlight(int flightID)
+        {
+            //Find Existing Record
+            Flight flight = this.iFlightRepo.FindFlight(flightID);
+
+            //If Flight in progress -> throw error
+            //If Flight has tickets sold
+            if (flight.Tickets.Any())
+            {
+                ModelState.AddModelError("TicketError", "This flight already has tickets sold!");
+            }
+            if(flight.FlightStatus != FlightStatus.Planned)
+
+            {
+                ModelState.AddModelError("InProgressError", "This flight is already in progress!");
+
+            }
+            if (!ModelState.IsValid)
+            {
+                FlightViewModel viewModel = new FlightViewModel();
+                CreateDropDownLists();
+
+                viewModel.DepartureAirportID = flight.DepartureAirportID;
+                viewModel.ArrivalAirportID = flight.ArrivalAirportID;
+                viewModel.DepartureDateTime = flight.DepartureDateTime;
+                viewModel.ArrivalDateTime = flight.EstimatedArrivalDateTime;
+                viewModel.Price = flight.Price;
+                viewModel.PlaneID = flight.PlaneID;
+                return View("ConfirmDeleteFlight", viewModel);
+            }
+            else
+            {
+                this.iFlightRepo.DeleteFlight(flight);
+                return RedirectToAction("SearchFLights");
+            }
+
+        }
+
+        public IActionResult ShowFlightDetails(int flightID)
+        {
+            Flight flight = this.iFlightRepo.FindFlight(flightID);
+            return View(flight);
         }
     }
 }

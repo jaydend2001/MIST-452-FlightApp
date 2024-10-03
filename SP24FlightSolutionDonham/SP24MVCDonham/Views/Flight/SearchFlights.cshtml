@@ -95,9 +95,10 @@
                         <th>Tickets Sold</th>
                     }
                     <th>Seats Available</th>
+                    <th>Details</th>
                     @if (User.IsInRole("Administrator"))
                     {
-                        <th>Edit</th>
+                        <th>Actions</th>
                     }
                 </tr>
             </thead>
@@ -119,14 +120,32 @@
                             <td>@flight.Tickets.Count</td>
                         }
                         <td>@(flight.Plane.Capacity-flight.Tickets.Count)</td>
+                        <td>
+                            <a class="btn btn-primary"
+                               asp-controller="Flight"
+                               asp-action="ShowFlightDetails"
+                               asp-route-flightID="@flight.FlightID">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                        </td>
                         @if (User.IsInRole("Administrator"))
                         {
                             <td>
-                                <a class="btn btn-warning" asp-controller="Flight"
+                                <a class="btn btn-warning" 
+                                    asp-controller="Flight"
                                     asp-action="EditFlight" 
                                     asp-route-flightID="@flight.FlightID">
-                                    Edit Flight
+                                    <i class="bi bi-pencil-square"></i>
                                 </a>
+                                @if (flight.FlightStatus == FlightStatus.Planned && !flight.Tickets.Any())
+                                {
+                                    <a class="btn btn-danger" 
+                                    asp-controller="Flight"
+                                    asp-action="ConfirmDeleteFlight"
+                                    asp-route-flightID="@flight.FlightID">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+                                }
                             </td>
                         }
                     </tr>

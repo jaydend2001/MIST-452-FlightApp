@@ -25,6 +25,9 @@ builder.Services.AddTransient<IFlightRepo, FlightRepo>();
 builder.Services.AddTransient<IAirportRepo, AirportRepo>();
 builder.Services.AddTransient<IAirlineRepo, AirlineRepo>();
 builder.Services.AddTransient<IPlaneRepo, PlaneRepo>();
+builder.Services.AddTransient<IAppUserRepo, AppUserRepo>();
+builder.Services.AddTransient<ITicketRepo, TicketRepo>();
+builder.Services.AddSession();
 
 var app = builder.Build();
 

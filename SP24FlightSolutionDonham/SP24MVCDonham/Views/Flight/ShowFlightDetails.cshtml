@@ -1,0 +1,92 @@
+﻿@model Flight
+@{
+    ViewData["Title"] = "Flight Details";
+}
+
+<h1>Flight Details</h1>
+
+<a asp-controller="Ticket" asp-action="PurchaseTicket" 
+    asp-route-flightID="@Model.FlightID" class="btn btn-outline-success"
+>
+Purchase Ticket
+</a>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <td>Flight ID</td>
+        <td>@Model.FlightID</td>
+    </tr>
+    <tr>
+        <td>Flight Status</td>
+        <td>@Model.FlightStatus</td>
+    </tr>
+    <tr>
+        <td>Duration</td>
+        <td>@Model.Duration</td>
+    </tr>
+</table>
+
+<h3>Flight Airport Information</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Airport Type</th>
+            <th>ID</th>
+            <th>Abbreviation</th>
+            <th>Name</th>
+            <th>Number of Gates</th>
+            <th>Flight Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Departure</td>
+            <td>@Model.DepartureAirport.AirportID</td>
+            <td>@Model.DepartureAirport.Abbreviation</td>
+            <td>@Model.DepartureAirport.AirportName</td>
+            <td>@Model.DepartureAirport.NumberOfGates</td>
+            <td>@Model.DepartureDateTime</td>
+        </tr>
+        <tr>
+            <td>Arrival</td>
+            <td>@Model.ArrivalAirport.AirportID</td>
+            <td>@Model.ArrivalAirport.Abbreviation</td>
+            <td>@Model.ArrivalAirport.AirportName</td>
+            <td>@Model.ArrivalAirport.NumberOfGates</td>
+            <td>@Model EstimatedArrivalDateTime</td>
+        </tr>
+    </tbody>
+</table>
+
+@if (User.IsInRole("Administrator") || User.IsInRole("Employee"))
+{
+    <h3>Tickets Sold</h3>
+    @if (Model.Tickets.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Ticketholder</th>
+                    <th>Purchase Date/Time</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Ticket ticket in Model.Tickets)
+                {
+                    <tr>
+                        <td>@ticket.TicketID</td>
+                        <td>@ticket.AppUser.FullName</td>
+                        <td>@ticket.PurchaseDateTime</td>
+                        <td>@ticket.PurchasePrice</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-danger">This flight has no tickets sold yet!</p>
+    }
+}

@@ -24,6 +24,7 @@ namespace SP24TestDonham
         private Mock<IAirportRepo> mockAirportRepo;
         private Mock<IAirlineRepo> mockAirlineRepo;
         private Mock<IPlaneRepo> mockPlaneRepo;
+        private Mock<IAppUserRepo> mockAppUserRepo;
         private FlightController controller;
 
         public FlightTest()
@@ -32,8 +33,11 @@ namespace SP24TestDonham
             this.mockAirportRepo = new Mock<IAirportRepo>();
             this.mockAirlineRepo = new Mock<IAirlineRepo>();
             this.mockPlaneRepo = new Mock<IPlaneRepo>();
+            this.mockAppUserRepo = new Mock<IAppUserRepo>();
             this.controller = new FlightController
-                (this.mockFlightRepo.Object, this.mockAirportRepo.Object, this.mockAirlineRepo.Object, this.mockPlaneRepo.Object);
+                (this.mockFlightRepo.Object, this.mockAirportRepo.Object, 
+                this.mockAirlineRepo.Object, this.mockPlaneRepo.Object,
+                this.mockAppUserRepo.Object);
         }
 
         [Fact]
@@ -213,7 +217,8 @@ namespace SP24TestDonham
             Airline airline = new Airline("Southwest");
             plane.Airline = airline;
             flight.Plane = plane;
-            flight.Tickets.Add(new Ticket());
+            flight.Tickets.Add(new Ticket(1, "fhdfhjsd", 100));
+            flight.FlightID = 1;
             flights.Add(flight);
 
             flight = new Flight(new DateTime(2024, 05, 10, 11, 00, 00), new DateTime(2024, 04, 10, 12, 00, 00),
@@ -235,7 +240,7 @@ namespace SP24TestDonham
             FlightViewModel viewModel = new FlightViewModel();
             viewModel.DepartureAirportID = 1;
             viewModel.ArrivalAirportID = 2;
-            viewModel.DepartureDateTime = new DateTime(2024, 10, 10, 9, 0, 0);
+            viewModel.DepartureDateTime = new DateTime(2024, 10, 10, 9, 00, 00);
             viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
             viewModel.Price = 100m;
             viewModel.PlaneID = 3;
@@ -266,16 +271,63 @@ namespace SP24TestDonham
             Assert.Equal(viewModel.Price, newFlight.Price);
         }
 
-            [Fact]
-            public void ShouldNotAddEditFlight()
+        [Fact]
+        public void ShouldNotAddFlightBecauseDuplicate()
+        {
+            //Arrange
+            FlightViewModel viewModel = new FlightViewModel();
+            viewModel.DepartureAirportID = 1;
+            viewModel.ArrivalAirportID = 2;
+            viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 0, 0);
+            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
+            viewModel.Price = 100m;
+            viewModel.PlaneID = 1;
+            this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
+            this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
+            this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
+
+            //Act
+            this.controller.AddFlight(viewModel);
+
+            //Assert
+            this.mockFlightRepo.Verify(m => m.AddFlight(It.IsAny<Flight>()), Times.Never);
+        }
+
+        [Fact]
+        public void ShouldNotEditFlightBecauseDuplicate()
+        {
+            //Arrange
+            FlightViewModel viewModel = new FlightViewModel();
+            viewModel.DepartureAirportID = 1;
+            viewModel.ArrivalAirportID = 2;
+            viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 00, 00);
+            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
+            viewModel.Price = 100m;
+            viewModel.PlaneID = 1;
+            viewModel.FlightID = 2;
+            this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
+            this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
+            this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
+
+            //Act
+            this.controller.EditFlight(viewModel);
+
+            //Assert
+            this.mockFlightRepo.Verify(m => m.EditFlight(It.IsAny<Flight>()), Times.Never);
+        }
+
+        [Fact]
+            public void ShouldNotAddEditFlightBecauseModelInvalid()
             {
                 //Arrange
                 FlightViewModel viewModel = new FlightViewModel();
                 viewModel.ArrivalAirportID = 2;
-                viewModel.DepartureDateTime = new DateTime(2024, 10, 10, 9, 0, 0);
+                viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 0, 0);
                 viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
                 viewModel.Price = 100m;
-                viewModel.PlaneID = 3;
+                viewModel.PlaneID = 1;
                 string expectedError = "The DepartureAirportID field is required.";
 
                 //Act
@@ -303,12 +355,9 @@ namespace SP24TestDonham
             viewModel.FlightID = 1;
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns
                 (CreateMockFlights());
-            this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new
-                List<Airport>());
-            this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new
-                List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>
-                ());
+            this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
+            this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             Flight oldFlight = new Flight(new DateTime(2024, 9, 9, 10, 0, 0),
                 new DateTime(2024, 9, 9, 11, 0, 0),
@@ -332,5 +381,64 @@ namespace SP24TestDonham
             Assert.Equal(viewModel.Price, oldFlight.Price);
         }
 
+        [Fact]
+        public void ShouldDeleteFlight()
+        {
+            //Arrange
+            int flightID = 1;
+            Flight flight = new Flight(new DateTime(2024, 9, 9, 10, 0, 0),
+                new DateTime(2024, 9, 9, 11, 0, 0),
+                10m, 100, 100, 200);
+            flight.FlightID = 1;
+            this.mockFlightRepo.Setup(m => m.FindFlight (flight.FlightID)).Returns(flight);
+
+            //Act
+            this.controller.DeleteFlight(flight.FlightID);
+
+            //Assert
+            this.mockFlightRepo.Verify(m => m.DeleteFlight(flight), Times.Once);
+        }
+
+        [Fact]
+        public void ShouldNotDeleteFlightBecauseTicketsAreSold()
+        {
+            //Arrange
+            Flight flight = new Flight(new DateTime(2024, 9, 9, 10, 0, 0),
+                new DateTime(2024, 9, 9, 11, 0, 0),
+                10m, 100, 100, 200);
+            flight.FlightID = 1;
+            flight.Tickets.Add(new Ticket());
+            this.mockFlightRepo.Setup(m => m.FindFlight(flight.FlightID)).Returns(flight);
+            this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
+            this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
+
+            //Act
+            this.controller.DeleteFlight(flight.FlightID);
+
+            //Assert
+            this.mockFlightRepo.Verify(m => m.DeleteFlight(flight), Times.Never);
+        }
+
+        [Fact]
+        public void ShouldNotDeleteFlightBecauseFlightInProgress()
+        {
+            //Arrange
+            Flight flight = new Flight(new DateTime(2024, 9, 9, 10, 0, 0),
+                new DateTime(2024, 9, 9, 11, 0, 0),
+                10m, 100, 100, 200);
+            flight.FlightID = 1;
+            flight.FlightStatus = FlightStatus.Delayed;
+            this.mockFlightRepo.Setup(m => m.FindFlight(flight.FlightID)).Returns(flight);
+            this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
+            this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
+
+            //Act
+            this.controller.DeleteFlight(flight.FlightID);
+
+            //Assert
+            this.mockFlightRepo.Verify(m => m.DeleteFlight(flight), Times.Never);
+        }
     }
 }

@@ -20,6 +20,12 @@ namespace SP24MVCDonham.Models
             return flight.FlightID;
         }
 
+        public void DeleteFlight(Flight flight)
+        {
+            this.database.Flights.Remove(flight);
+            this.database.SaveChanges();
+        }
+
         public void EditFlight(Flight flight)
         {
             this.database.Flights.Update(flight);
@@ -28,7 +34,8 @@ namespace SP24MVCDonham.Models
 
         public Flight FindFlight(int flightID)
         {
-            return this.database.Flights.Find(flightID);
+            return this.database.Flights.Include(f => f.Tickets).ThenInclude(t => t.AppUser).Include(f => 
+            f.DepartureAirport).Include(f => f.ArrivalAirport).Where(f => f.FlightID == flightID).FirstOrDefault();
         }
 
         public List<Flight> ListAllFlights()
