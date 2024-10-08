@@ -7,6 +7,9 @@
 
 <a asp-controller="Ticket" asp-action="PurchaseTicket" 
     asp-route-flightID="@Model.FlightID" class="btn btn-outline-success"
+    disabled="@(Model.FlightStatus != FlightStatus.Planned 
+    && Model.FlightStatus != FlightStatus.Delayed &&
+    (Model.Tickets.Count() >= Model.Plane.Capacity))"
 >
 Purchase Ticket
 </a>

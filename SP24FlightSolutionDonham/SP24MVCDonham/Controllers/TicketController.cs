@@ -22,8 +22,22 @@ namespace SP24MVCDonham.Controllers
         {
             try
             {
-                string appUserID = this.iAppUserRepo.GetAppUserID();
+                //PRECHECKS
                 Flight flight = this.iFLightRepo.FindFlight(flightID);
+                if (flight.FlightStatus != FlightStatus.Planned && flight.FlightStatus != FlightStatus.Delayed)
+                {
+                    //SHOULD NOT PURCHASE
+                    return RedirectToAction("ShowFlightDetails", "Flight", new { FlightID = flightID });
+                }
+
+                if (flight.Tickets.Count() >= flight.Plane.Capacity)
+                {
+                    //SHOULD NOT PURCHASE
+                    return RedirectToAction("ShowFlightDetails", "Flight", new { FlightID = flightID });
+                }
+
+                string appUserID = this.iAppUserRepo.GetAppUserID();
+               
                 //Create ticket
                 Ticket ticket = new Ticket(flightID, appUserID, flight.Price);
                 int ticketID = this.iTicketRepo.AddTicket(ticket);

@@ -51,8 +51,7 @@ namespace SP24TestDonham
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
@@ -72,8 +71,7 @@ namespace SP24TestDonham
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
@@ -93,8 +91,7 @@ namespace SP24TestDonham
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>()); 
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
@@ -133,8 +130,7 @@ namespace SP24TestDonham
             int expected = 1;
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
@@ -154,8 +150,7 @@ namespace SP24TestDonham
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
@@ -175,8 +170,7 @@ namespace SP24TestDonham
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
@@ -196,8 +190,7 @@ namespace SP24TestDonham
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
-            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new
-                List<Plane>());
+            this.mockPlaneRepo.Setup(m => m.ListAllPlanes()).Returns(new List<Plane>());
 
             //Act
             this.controller.SearchFlights(viewModel);
