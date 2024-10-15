@@ -13,6 +13,12 @@ namespace SP24MVCDonham.Models
             this.database = dbContext;
         }
 
+        public List<Flight> ListAllFlights()
+        {
+            return this.database.Flights.Include(f => f.ArrivalAirport).Include(f => f.DepartureAirport).Include(f => f.Plane).ThenInclude
+            (p => p.Airline).Include(f => f.Tickets).ToList();
+        }
+
         public int AddFlight(Flight flight)
         {
             this.database.Flights.Add(flight);
@@ -20,10 +26,10 @@ namespace SP24MVCDonham.Models
             return flight.FlightID;
         }
 
-        public void DeleteFlight(Flight flight)
+        public Flight FindFlight(int flightID)
         {
-            this.database.Flights.Remove(flight);
-            this.database.SaveChanges();
+            return this.database.Flights.Include(f => f.Tickets).ThenInclude(t => t.AppUser).Include(f =>
+            f.DepartureAirport).Include(f => f.ArrivalAirport).Include(f => f.Plane).Where(f => f.FlightID == flightID).FirstOrDefault();
         }
 
         public void EditFlight(Flight flight)
@@ -32,16 +38,10 @@ namespace SP24MVCDonham.Models
             this.database.SaveChanges();
         }
 
-        public Flight FindFlight(int flightID)
+        public void DeleteFlight(Flight flight)
         {
-            return this.database.Flights.Include(f => f.Tickets).ThenInclude(t => t.AppUser).Include(f => 
-            f.DepartureAirport).Include(f => f.ArrivalAirport).Where(f => f.FlightID == flightID).FirstOrDefault();
-        }
-
-        public List<Flight> ListAllFlights()
-        {
-            return this.database.Flights.Include(f => f.ArrivalAirport).Include(f => 
-            f.DepartureAirport).Include(f => f.Plane).ThenInclude(p => p.Airline).Include(f => f.Tickets).ToList();
+            this.database.Flights.Remove(flight);
+            this.database.SaveChanges();
         }
     }
 }

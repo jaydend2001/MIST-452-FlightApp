@@ -49,5 +49,46 @@ namespace SP24TestDonham
             Assert.Equal(flight.Price, ticket.PurchasePrice);
             Assert.Equal(flightID, ticket.FlightID);
         }
+
+        [Fact]
+        public void ShouldNotPurchaseTicketBecauseFlightInProgress()
+        {
+            //Arrange
+            int flightID = 1;
+            Flight flight = new Flight(new DateTime(2024, 10, 8), new DateTime(2024, 10, 9), 100m, 1, 1, 2);
+            flight.FlightStatus = FlightStatus.Departed;
+            Plane plane = new Plane("737", 100, 1);
+            flight.Plane = plane;
+            this.mockFlightRepo.Setup(m => m.FindFlight(flightID)).Returns(flight);
+            string appUSerID = "1";
+            this.mockAppUserRepo.Setup(m => m.GetAppUserID()).Returns("1");
+
+            //Act
+            this.controller.PurchaseTicket(flightID);
+
+            //Assert
+            this.mockTicketRepo.Verify(m => m.AddTicket(It.IsAny<Ticket>()), Times.Never);
+        }
+
+        [Fact]
+        public void ShouldNotPurchaseTicketBecauseFlightIsFull()
+        {
+            //Arrange
+            int flightID = 1;
+            Flight flight = new Flight(new DateTime(2024, 10, 8), new DateTime(2024, 10, 9), 100m, 1, 1, 2);
+            Plane plane = new Plane("737", 1, 1);
+            Ticket ticket = new Ticket(1, "1", 100m);
+            flight.Tickets.Add(ticket);
+            flight.Plane = plane;
+            this.mockFlightRepo.Setup(m => m.FindFlight(flightID)).Returns(flight);
+            string appUSerID = "1";
+            this.mockAppUserRepo.Setup(m => m.GetAppUserID()).Returns("1");
+
+            //Act
+            this.controller.PurchaseTicket(flightID);
+
+            //Assert
+            this.mockTicketRepo.Verify(m => m.AddTicket(It.IsAny<Ticket>()), Times.Never);
+        }
     }
 }

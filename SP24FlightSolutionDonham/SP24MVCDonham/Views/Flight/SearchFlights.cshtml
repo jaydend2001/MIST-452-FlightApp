@@ -137,15 +137,17 @@
                                     asp-route-flightID="@flight.FlightID">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                @if (flight.FlightStatus == FlightStatus.Planned && !flight.Tickets.Any())
-                                {
-                                    <a class="btn btn-danger" 
+                                @* @if (flight.FlightStatus == FlightStatus.Planned && !flight.Tickets.Any())
+                                { *@
+                                    <a class="btn btn-danger
+                                    @((flight.FlightStatus == FlightStatus.Planned && !flight.Tickets.Any())
+                                    ? "" : "disabled")"
                                     asp-controller="Flight"
                                     asp-action="ConfirmDeleteFlight"
                                     asp-route-flightID="@flight.FlightID">
                                         <i class="bi bi-trash3"></i>
                                     </a>
-                                }
+                               @*  } *@
                             </td>
                         }
                     </tr>

@@ -92,8 +92,7 @@ namespace SP24MVCDonham.Controllers
 
             if (viewModel.AvailableFlights)
             {
-                flights = flights.Where(f => f.Plane.Capacity > 
-                f.Tickets.Count).ToList();
+                flights = flights.Where(f => f.Plane.Capacity > f.Tickets.Count).ToList();
             }
 
             //return result to user
@@ -104,13 +103,13 @@ namespace SP24MVCDonham.Controllers
         public void CreateDropDownLists()
         {
             List<Airport> airports = this.iAirportRepo.ListAllAirports();
+            List<Airline> airlines = this.iAirlineRepo.ListAllAirlines();
+            List<Plane> planes = this.iPlaneRepo.ListAllPlanes();
 
             //BAG - Data structures
             ViewData["AllAirprots"] = new SelectList(airports, "AirportID", "AirportName");
-
-            List<Airline> airlines = this.iAirlineRepo.ListAllAirlines();
-
             ViewData["AllAirlines"] = new SelectList(airlines, "AirlineID", "AirlineName");
+            ViewData["AllPlanes"] = new SelectList(planes, "PlaneID", "PlaneInformation");
         }
 
         [HttpGet]
@@ -118,6 +117,9 @@ namespace SP24MVCDonham.Controllers
         public IActionResult AddFlight()
         {
             FlightViewModel viewModel = new FlightViewModel();
+            CreateDropDownLists();
+            viewModel.DepartureDateTime = DateTime.Today;
+            viewModel.ArrivalDateTime = DateTime.Today;
             return View(viewModel);
         }
         //BUTTON
@@ -127,8 +129,7 @@ namespace SP24MVCDonham.Controllers
         {
             List<Flight> existingFlights = this.iFlightRepo.ListAllFlights();
             //Duplicate Check based on PlaneID and DepartureDateTime
-            if(existingFlights.Where(f => f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime ==
-            viewModel.DepartureDateTime.Value).Any())
+            if(existingFlights.Where(f => f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime == viewModel.DepartureDateTime.Value).Any())
             {
                 ModelState.AddModelError("Duplicate", "This record appears to be a duplicate! There is already a " +
                   "flight on this plane that is leaving at this time. Flight ID: " + existingFlights.Where(f =>
@@ -150,8 +151,7 @@ namespace SP24MVCDonham.Controllers
             {
                 //NOT ADD
                 return View(viewModel);
-            }
-            
+            }           
         }
 
         [HttpGet]
@@ -160,8 +160,7 @@ namespace SP24MVCDonham.Controllers
 
         {
             //Find Existing Record
-            Flight flight = this.iFlightRepo.FindFlight
-                (flightID);
+            Flight flight = this.iFlightRepo.FindFlight(flightID);
 
             FlightViewModel viewModel = new FlightViewModel();
             CreateDropDownLists();
@@ -172,7 +171,8 @@ namespace SP24MVCDonham.Controllers
             viewModel.ArrivalDateTime = flight.EstimatedArrivalDateTime;
             viewModel.Price = flight.Price;
             viewModel.PlaneID = flight.PlaneID;
-            return View();
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -192,8 +192,7 @@ namespace SP24MVCDonham.Controllers
             if (ModelState.IsValid)
             {
                 //Find Existing Record
-                Flight flight = this.iFlightRepo.FindFlight
-                    (viewModel.FlightID.Value);
+                Flight flight = this.iFlightRepo.FindFlight(viewModel.FlightID.Value);
 
                 //Update Values
                 flight.DepartureAirportID = viewModel.DepartureAirportID.Value;
@@ -210,7 +209,7 @@ namespace SP24MVCDonham.Controllers
             else
             {
                 CreateDropDownLists();
-                return View();
+                return View(viewModel);
             }
         }
 
@@ -218,7 +217,6 @@ namespace SP24MVCDonham.Controllers
         [Authorize(Roles = "Administrator")]
         public IActionResult ConfirmDeleteFlight(int flightID)
         {
-            //Find Existing Record
             Flight flight = this.iFlightRepo.FindFlight (flightID);
 
             FlightViewModel viewModel = new FlightViewModel();
@@ -230,7 +228,8 @@ namespace SP24MVCDonham.Controllers
             viewModel.ArrivalDateTime = flight.EstimatedArrivalDateTime;
             viewModel.Price = flight.Price;
             viewModel.PlaneID = flight.PlaneID;
-            return View();
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -241,16 +240,14 @@ namespace SP24MVCDonham.Controllers
             Flight flight = this.iFlightRepo.FindFlight(flightID);
 
             //If Flight in progress -> throw error
-            //If Flight has tickets sold
             if (flight.Tickets.Any())
             {
-                ModelState.AddModelError("TicketError", "This flight already has tickets sold!");
+                ModelState.AddModelError("TicketSoldError", "This flight already has tickets sold!");
             }
             if(flight.FlightStatus != FlightStatus.Planned)
 
             {
                 ModelState.AddModelError("InProgressError", "This flight is already in progress!");
-
             }
             if (!ModelState.IsValid)
             {
@@ -270,7 +267,6 @@ namespace SP24MVCDonham.Controllers
                 this.iFlightRepo.DeleteFlight(flight);
                 return RedirectToAction("SearchFLights");
             }
-
         }
 
         public IActionResult ShowFlightDetails(int flightID)

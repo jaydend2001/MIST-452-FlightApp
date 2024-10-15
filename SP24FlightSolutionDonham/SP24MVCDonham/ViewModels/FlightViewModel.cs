@@ -4,7 +4,6 @@ namespace SP24MVCDonham.ViewModels
 {
     public class FlightViewModel
     {
-        public int? FlightID { get; set; }
         [Required]
         public int? DepartureAirportID { get; set; }
 
@@ -23,5 +22,7 @@ namespace SP24MVCDonham.ViewModels
         [Required]
         [DataType(DataType.Currency)]
         public decimal? Price { get; set; }
+
+        public int? FlightID { get; set; }
     }
 }
