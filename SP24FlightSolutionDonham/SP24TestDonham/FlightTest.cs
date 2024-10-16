@@ -203,9 +203,8 @@ namespace SP24TestDonham
             List<Flight> flights = new List<Flight>();
 
             Flight flight = new Flight(new DateTime(2024, 04, 10, 10, 00, 00), new DateTime(2024, 04, 10, 11, 00, 00),
-                200m, 1, 1, 2);
+                200m, 1, 2, 2);
             Plane plane = new Plane("737", 1, 1);
-            flight.Plane = plane;
             Airline airline = new Airline("Southwest");
             plane.Airline = airline;
             flight.Plane = plane;
@@ -214,9 +213,8 @@ namespace SP24TestDonham
             flights.Add(flight);
 
             flight = new Flight(new DateTime(2024, 05, 10, 11, 00, 00), new DateTime(2024, 04, 10, 12, 00, 00),
-                300m, 1, 2, 1);
+                300m, 2, 1, 1);
             plane = new Plane("747", 200, 2);
-            flight.Plane = plane;
             airline = new Airline("Delta");
             plane.Airline = airline;
             flight.Plane = plane;
@@ -233,10 +231,11 @@ namespace SP24TestDonham
             FlightViewModel viewModel = new FlightViewModel();
             viewModel.DepartureAirportID = 1;
             viewModel.ArrivalAirportID = 2;
-            viewModel.DepartureDateTime = new DateTime(2024, 10, 10, 10, 00, 00);
-            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 11, 0, 0);
+            viewModel.DepartureDateTime = new DateTime(2024, 10, 10, 9, 00, 00);
+            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
             viewModel.Price = 100m;
             viewModel.PlaneID = 3;
+
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());
@@ -248,7 +247,7 @@ namespace SP24TestDonham
             this.controller.AddFlight(viewModel);
 
             //Assert
-            this.mockFlightRepo.Verify(m => m.AddFlight(It.IsAny<Flight>()), Times.Once);
+            this.mockFlightRepo.Verify(m => m.AddFlight(It.IsAny<Flight>()), Times.Once());
             Assert.Equal(viewModel.DepartureAirportID, newFlight.DepartureAirportID);
             Assert.Equal(viewModel.ArrivalAirportID, newFlight.ArrivalAirportID);
             Assert.Equal(viewModel.PlaneID, newFlight.PlaneID);
@@ -292,6 +291,7 @@ namespace SP24TestDonham
             viewModel.Price = 100m;
             viewModel.PlaneID = 1;
             viewModel.FlightID = 2;
+
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
             this.mockAirlineRepo.Setup(m => m.ListAllAirlines()).Returns(new List<Airline>());

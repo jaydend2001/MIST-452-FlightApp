@@ -142,7 +142,7 @@ namespace SP24MVCDonham.Controllers
                 //ADD
                 //Create new object
                 Flight flight = new Flight(viewModel.DepartureDateTime.Value, viewModel.ArrivalDateTime.Value, 
-                    viewModel.Price.Value, viewModel.PlaneID.Value, viewModel.DepartureAirportID.Value, viewModel.ArrivalAirportID.Value);
+                    viewModel.Price.Value, viewModel.DepartureAirportID.Value, viewModel.ArrivalAirportID.Value, viewModel.PlaneID.Value);
                 //Save in the database
                 int flightID = this.iFlightRepo.AddFlight(flight);
                 return RedirectToAction("SearchFlights");
@@ -150,6 +150,7 @@ namespace SP24MVCDonham.Controllers
             else
             {
                 //NOT ADD
+                CreateDropDownLists();
                 return View(viewModel);
             }           
         }
@@ -273,6 +274,21 @@ namespace SP24MVCDonham.Controllers
         {
             Flight flight = this.iFlightRepo.FindFlight(flightID);
             return View(flight);
+        }
+
+        public IActionResult EditFlightStatus(int flightID, FlightStatus flightStatus)
+        {
+            try
+            {
+                Flight flight = this.iFlightRepo.FindFlight(flightID);
+                flight.FlightStatus = flightStatus;
+                this.iFlightRepo.EditFlight(flight);
+                return RedirectToAction("ShowFlightDetails", new { FlightID = flightID });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("SearchFlights");
+            }
         }
     }
 }

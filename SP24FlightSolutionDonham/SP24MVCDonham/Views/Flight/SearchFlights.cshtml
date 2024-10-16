@@ -131,6 +131,13 @@
                         @if (User.IsInRole("Administrator"))
                         {
                             <td>
+                                <a class="btn btn-primary"
+                                   asp-controller="Flight"
+                                   asp-action="EditFlightStatus"
+                                   asp-route-flightID="@flight.FlightID"
+                                   asp-route-FlightStatus="@FlightStatus.Departed">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
                                 <a class="btn btn-warning" 
                                     asp-controller="Flight"
                                     asp-action="EditFlight" 
