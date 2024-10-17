@@ -5,6 +5,8 @@
 
 <h1>Flight Details</h1>
 
+<br/>
+
 <a asp-controller="Ticket" asp-action="PurchaseTicket"
    asp-route-flightID="@Model.FlightID" 
    class="btn btn-outline-success
@@ -14,6 +16,63 @@
 >
     Purchase Ticket
 </a>
+
+@if (User.IsInRole("Administrator") || User.IsInRole("Employee"))
+{
+    @if (Model.FlightStatus == FlightStatus.Planned)
+    {
+        <a class="btn btn-warning"
+        asp-controller="Flight"
+        asp-action="EditFlightStatus"
+        asp-route-flightID="@Model.FlightID"
+        asp-route-FlightStatus="@FlightStatus.Delayed">
+            <i class="bi bi-airplane"></i> Flight Delayed
+        </a>
+    }
+
+    @if (Model.FlightStatus == FlightStatus.Planned || Model.FlightStatus == FlightStatus.Delayed)
+    {
+        <a class="btn btn-primary"
+        asp-controller="Flight"
+        asp-action="EditFlightStatus"
+        asp-route-flightID="@Model.FlightID"
+        asp-route-FlightStatus="@FlightStatus.Departed">
+            <i class="bi bi-airplane"></i> Flight Departed
+        </a>
+    }
+
+    @if (Model.FlightStatus == FlightStatus.Departed)
+    {
+        <a class="btn btn-primary"
+        asp-controller="Flight"
+        asp-action="EditFlightStatus"
+        asp-route-flightID="@Model.FlightID"
+        asp-route-FlightStatus="@FlightStatus.Arrived">
+            <i class="bi bi-airplane"></i> Flight Arrived
+        </a>
+    }
+
+    @if (Model.FlightStatus == FlightStatus.Planned || Model.FlightStatus == FlightStatus.Delayed)
+    {
+        <a class="btn btn-danger"
+        asp-controller="Flight"
+        asp-action="EditFlightStatus"
+        asp-route-flightID="@Model.FlightID"
+        asp-route-FlightStatus="@FlightStatus.Cancelled">
+            <i class="bi bi-airplane"></i> Flight Cancelled
+        </a>
+    }
+
+    <a class="btn btn-warning"
+    asp-controller="Flight"
+    asp-action="EditFlight"
+    asp-route-flightID="@Model.FlightID">
+        <i class="bi bi-pencil-square"></i> Edit Flight
+    </a>
+}
+
+<br/>
+<br/>
 
 <table class="table table-bordered table-striped">
     <tr>

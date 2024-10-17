@@ -34,6 +34,7 @@ namespace SP24MVCDonham.Controllers
         {
             SearchFlightsViewModel viewModel = new SearchFlightsViewModel();
             viewModel.AvailableFlights = true;
+            viewModel.FlightStatus = FlightStatus.Planned;
             CreateDropDownLists();
 
             return View(viewModel);
@@ -205,7 +206,8 @@ namespace SP24MVCDonham.Controllers
 
                 //Save Changes
                 this.iFlightRepo.EditFlight(flight);
-                return RedirectToAction("SearchFlights");
+                // return RedirectToAction("SearchFlights");
+                return RedirectToAction("ShowFlightDetails", new { FlightID = viewModel.FlightID });
             }
             else
             {
@@ -276,6 +278,7 @@ namespace SP24MVCDonham.Controllers
             return View(flight);
         }
 
+        [Authorize(Roles = "Administrator, Employee")]
         public IActionResult EditFlightStatus(int flightID, FlightStatus flightStatus)
         {
             try

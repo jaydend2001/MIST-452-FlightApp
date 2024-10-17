@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Models;
@@ -18,6 +19,7 @@ namespace SP24MVCDonham.Controllers
             this.iTicketRepo = ticketRepo;
         }
 
+        [Authorize]
         public IActionResult PurchaseTicket(int flightID)
         {
             try
