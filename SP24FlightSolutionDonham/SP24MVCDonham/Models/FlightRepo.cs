@@ -23,6 +23,7 @@ namespace SP24MVCDonham.Models
         {
             this.database.Flights.Add(flight);
             this.database.SaveChanges();
+
             return flight.FlightID;
         }
 

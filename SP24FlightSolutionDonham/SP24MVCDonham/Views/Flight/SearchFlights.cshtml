@@ -78,7 +78,7 @@
         <br />
         <hr />
         <br />
-        <table class="table table-bordered table-striped">
+        <table id="dataTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>FlightID</th>
@@ -131,6 +131,7 @@
                         @if (User.IsInRole("Administrator"))
                         {
                             <td>
+                                
                                 <a class="btn btn-warning" 
                                     asp-controller="Flight"
                                     asp-action="EditFlight" 
