@@ -121,6 +121,62 @@
     </tbody>
 </table>
 
+@if (ViewBag.departureAirportMapMarker != null && ViewBag.arrivalAirportMapMarker != null)
+{
+    <p><i>Departure Airport = Blue Map Marker --> Arrival Airport = Green Map Marker</i></p>
+    <div id="map" style="height: 400px;"></div>
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/css/atlas.min.css?api-version=2.0" />
+    <script src="https://atlas.microsoft.com/sdk/js/atlas.min.js?api-version=2.0"></script>
+    <script>
+        var map, datasource, line;
+        var map = new atlas.Map('map', {
+            center: [-95.7715563417, 40.9672433944],
+            zoom: 3,
+            view: 'Auto',
+            authOptions: {
+                authType: 'subscriptionKey',
+                subscriptionKey: '4ATSIAHq9Ckz9ZGXzEKBNcUKcZnz0SkwYoOL6qVoHrrFxV0RPrltJQQJ99AJACYeBjFChmOuAAAgAZMP1JXW'
+            }
+        });
+
+        map.events.add('ready', function () {
+            //Create a data source and add it to the map.
+            datasource = new atlas.source.DataSource();
+            map.sources.add(datasource);
+
+            //Create a layer that defines how to render the line on the map.
+            map.layers.add(new atlas.layer.LineLayer(datasource, null, {
+                strokeColor: 'red',
+                strokeWidth: 5
+            }))
+
+            //Create a line object and wrap it with the Shape class for easier updating.
+            line = new atlas.Shape(new atlas.data.Feature(new atlas.data.lineString([0, 0], [0, 0]])));
+            datasource.add(line);
+
+            var departureAirportMapMarker = @Html.Raw(ViewBag.departureAirportMapMarker);
+            var arrivalAirportMapMarker = @Html.Raw(ViewBag.arrivalAirportMapMarker);
+
+            var marker = new atlas.HtmlMarker({
+                color: departureAirportMapMarker.Color,
+                text: departureAirportMapMarker.Label,
+                position: [departureAirportMapMarker.Longitude, departureAirportMapMarker.Latitude],
+            })
+            map.markers.add(marker);
+
+            marker = new atlas.HtmlMarker({
+                color: arrivalAirportMapMarker.Color,
+                text: arrivalAirportMapMarker.Label,
+                position: [arrivalAirportMapMarker.Longitude, arrivalAirportMapMarker.Latitude],
+            })
+            map.markers.add(marker);
+
+            line.setCoordinates([[departureAirportMapMarker.Longitude, departureAirportMapMarker.Latitude], 
+            [arrivalAirportMapMarker.Longitude, arrivalAirportMapMarker.Latitude]]);
+        })
+    </script>
+}
+<br />
 @if (User.IsInRole("Administrator") || User.IsInRole("Employee"))
 {
     <h3>Tickets Sold</h3>

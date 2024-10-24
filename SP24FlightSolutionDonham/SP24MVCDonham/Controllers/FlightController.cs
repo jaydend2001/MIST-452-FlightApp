@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Models;
 using SP24MVCDonham.ViewModels;
@@ -275,6 +276,37 @@ namespace SP24MVCDonham.Controllers
         public IActionResult ShowFlightDetails(int flightID)
         {
             Flight flight = this.iFlightRepo.FindFlight(flightID);
+            //Map Markers
+            string departureLabel;
+            if(flight.DepartureAirport.Abbreviation == null)
+            {
+                departureLabel = flight.DepartureAirport.AirportName;
+            }
+            else
+            {
+                departureLabel = flight.DepartureAirport.Abbreviation;
+            }
+
+            if(flight.DepartureAirport.Latitude != null && flight.DepartureAirport.Longitude != null){
+                ViewData["departureAirportMapMarker"] = JsonConvert.SerializeObject(new MapMarker(flight.DepartureAirportID, departureLabel, 
+                    flight.DepartureAirport.Latitude.Value, flight.DepartureAirport.Longitude.Value));
+            }
+
+            string arrivalLabel;
+            if (flight.ArrivalAirport.Abbreviation == null)
+            {
+                arrivalLabel = flight.ArrivalAirport.AirportName;
+            }
+            else
+            {
+                arrivalLabel = flight.ArrivalAirport.Abbreviation;
+            }
+
+            if (flight.ArrivalAirport.Latitude != null && flight.ArrivalAirport.Longitude != null)
+            {
+                ViewData["arrivalAirportMapMarker"] = JsonConvert.SerializeObject(new MapMarker(flight.ArrivalAirportID, arrivalLabel, flight.ArrivalAirport.Latitude.Value,
+                    flight.ArrivalAirport.Longitude.Value, "Green"));
+            }
             return View(flight);
         }
 

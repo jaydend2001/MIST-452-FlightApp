@@ -17,15 +17,22 @@ namespace SP24ClassLibraryDonham
         public string? Abbreviation { get; set; }
         public int NumberOfGates { get; set; }
 
+        //LAT LONG
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+
         [NotMapped]
         public List<Flight> Flights { get; set; } = new List<Flight>();
 
-        public Airport(string airportName, string? abbreviation = null, int numberOfGates = 0)
+        public Airport(string airportName, string? abbreviation = null, int numberOfGates = 0, decimal? lat = null, decimal? lon = null)
         {
             this.AirportName = airportName;
             this.Abbreviation = abbreviation;
             this.NumberOfGates = numberOfGates;
+            this.Latitude = lat;
+            this.Longitude = lon;
         }
+
         public Airport()
         {
             

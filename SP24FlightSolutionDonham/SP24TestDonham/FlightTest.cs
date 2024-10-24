@@ -312,27 +312,27 @@ namespace SP24TestDonham
         }
 
         [Fact]
-            public void ShouldNotAddEditFlightBecauseModelInvalid()
-            {
-                //Arrange
-                FlightViewModel viewModel = new FlightViewModel();
-                viewModel.ArrivalAirportID = 2;
-                viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 0, 0);
-                viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
-                viewModel.Price = 100m;
-                viewModel.PlaneID = 1;
-                string expectedError = "The DepartureAirportID field is required.";
+        public void ShouldNotAddEditFlightBecauseModelInvalid()
+        {
+            //Arrange
+            FlightViewModel viewModel = new FlightViewModel();
+            viewModel.ArrivalAirportID = 2;
+            viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 0, 0);
+            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 10, 0, 0);
+            viewModel.Price = 100m;
+            viewModel.PlaneID = 1;
+            string expectedError = "The DepartureAirportID field is required.";
 
-                //Act
-                //this.controller.AddFlight(viewModel);
-                List<ValidationResult> result = new List<ValidationResult>();
-                bool valid = Validator.TryValidateObject(viewModel, new ValidationContext(viewModel),
-                    result);
+            //Act
+            //this.controller.AddFlight(viewModel);
+            List<ValidationResult> result = new List<ValidationResult>();
+            bool valid = Validator.TryValidateObject(viewModel, new ValidationContext(viewModel),
+                result);
 
-                //Assert
-                Assert.False(valid);
-                Assert.Equal(expectedError, result[0].ErrorMessage);
-            }
+            //Assert
+            Assert.False(valid);
+            Assert.Equal(expectedError, result[0].ErrorMessage);
+        }
 
         [Fact]
         public void ShouldEditFlight()

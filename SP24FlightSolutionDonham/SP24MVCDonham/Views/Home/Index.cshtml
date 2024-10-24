@@ -3,6 +3,41 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Flight Management System</h1>
+    <br />
+    <h4>Airports</h4>
 </div>
+
+<div id="map" style="height: 500px;"></div>
+<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/css/atlas.min.css?api-version=2.0" />
+<script src="https://atlas.microsoft.com/sdk/js/atlas.min.js?api-version=2.0"></script>
+<script>
+    var map, datasource, line;
+    var map = new atlas.Map('map', {
+        center: [-95.7715563417, 40.9672433944],
+        zoom: 3,
+        view: 'Auto',
+        authOptions: {
+            authType: 'subscriptionKey',
+            subscriptionKey: '4ATSIAHq9Ckz9ZGXzEKBNcUKcZnz0SkwYoOL6qVoHrrFxV0RPrltJQQJ99AJACYeBjFChmOuAAAgAZMP1JXW'
+        }
+    });
+
+    map.events.add('ready', function () { 
+        //Create a data source and add it to the map.
+        datasource = new atlas.source.DataSource();
+        map.sources.add(datasource);
+
+        var mapMakers = @Html.Raw(ViewBag.mapMarkers);
+        mapMarkers.forEach(eachMapMarker)
+
+        function eachMapMarker(item, index, arr) {
+            var marker = new atlas.HtmlMarker({
+                color: item.Color,
+                text: item.Label,
+                position: [item.Longitude, item.Latitude],
+            })
+            map.markers.add(marker);
+        }
+    })
+</script>
