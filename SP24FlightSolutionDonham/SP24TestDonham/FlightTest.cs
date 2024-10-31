@@ -270,9 +270,9 @@ namespace SP24TestDonham
             viewModel.DepartureAirportID = 1;
             viewModel.ArrivalAirportID = 2;
             viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 0, 0);
-            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 11, 0, 0);
+            viewModel.ArrivalDateTime = new DateTime(2024, 04, 10, 11, 0, 0);
             viewModel.Price = 100m;
-            viewModel.PlaneID = 1;
+            viewModel.PlaneID = 2;
 
             this.mockFlightRepo.Setup(m => m.ListAllFlights()).Returns(CreateMockFlights());
             this.mockAirportRepo.Setup(m => m.ListAllAirports()).Returns(new List<Airport>());
@@ -291,10 +291,10 @@ namespace SP24TestDonham
         {
             //Arrange
             FlightViewModel viewModel = new FlightViewModel();
-            viewModel.DepartureAirportID = 1;
-            viewModel.ArrivalAirportID = 2;
-            viewModel.DepartureDateTime = new DateTime(2024, 04, 10, 10, 00, 00);
-            viewModel.ArrivalDateTime = new DateTime(2024, 10, 10, 11, 0, 0);
+            viewModel.DepartureAirportID = 2;
+            viewModel.ArrivalAirportID = 1;
+            viewModel.DepartureDateTime = new DateTime(2024, 05, 10, 11, 00, 00);
+            viewModel.ArrivalDateTime = new DateTime(2024, 04, 10, 11, 0, 0);
             viewModel.Price = 100m;
             viewModel.PlaneID = 1;
             viewModel.FlightID = 2;

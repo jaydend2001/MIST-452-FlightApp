@@ -7,5 +7,6 @@ namespace SP24MVCDonham.Models
         //Declare functionality
         //CRUD - Create Read Update Delete
         public List<Airline> ListAllAirlines();
+        public Airline FindAirline(int airlineID);
     }
 }

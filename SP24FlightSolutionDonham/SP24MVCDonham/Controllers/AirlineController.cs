@@ -38,5 +38,10 @@ namespace SP24MVCDonham.Controllers
             List<Airline> airlines = this.iAirlineRepo.ListAllAirlines();
             return View(airlines);
         }
+
+        public IActionResult ShowFlightsForAirline(int airlineID)
+        {
+            return View(this.iAirlineRepo.FindAirline(airlineID));
+        }
     }
 }

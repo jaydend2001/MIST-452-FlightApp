@@ -18,7 +18,7 @@ namespace SP24ClassLibraryDonham
 
         //MANY
         //Not saved in DB
-        [NotMapped]
+        //[NotMapped]
         public List<Plane> Planes { get; set; }
 
         //Parameterized Constructor

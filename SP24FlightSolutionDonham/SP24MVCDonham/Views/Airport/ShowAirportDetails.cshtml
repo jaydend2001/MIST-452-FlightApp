@@ -1,0 +1,48 @@
+﻿@model Airport
+@{
+    ViewData["Title"] = "ShowAirportDetails";
+}
+
+<h1>@Model.AirportName</h1>
+<h3>@Model.Abbreviation</h3>
+
+<p>Number of Gates: @Model.NumberOfGates</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Departing Flights</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Flight ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Flight flight in Model.DepartingFlights)
+                {
+                    <tr>
+                        <td>@flight.FlightID</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h3>Arriving Flights</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Flight ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Flight flight in Model.ArrivingFlights)
+                {
+                    <tr>
+                        <td>@flight.FlightID</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

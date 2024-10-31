@@ -1,0 +1,28 @@
+﻿@model Airline
+@{
+    ViewData["Title"] = "ShowFlightsForAirline";
+}
+
+<h1>Flights For Airline</h1>
+<br/>
+<h3>@Model.AirlineName</h3>
+<p>@Model.StockTicker</p>
+
+<table id="dataTable" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Flight ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Plane plane in Model.Planes)
+        {
+            @foreach (Flight flight in plane.Flights)
+            {
+                <tr>
+                    <td>@flight.FlightID</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

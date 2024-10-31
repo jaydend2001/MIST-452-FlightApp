@@ -18,6 +18,16 @@ namespace SP24MVCDonham.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Airport>().HasMany(a => a.DepartingFlights).WithOne(f => f.DepartureAirport).HasForeignKey(f => f.DepartureAirportID);
+
+            modelBuilder.Entity<Airport>().HasMany(a => a.ArrivingFlights).WithOne(f => f.ArrivalAirport).HasForeignKey(f => f.ArrivalAirportID);
         }
     }
 }

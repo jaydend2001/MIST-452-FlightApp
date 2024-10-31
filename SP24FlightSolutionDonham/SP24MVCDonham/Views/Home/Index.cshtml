@@ -8,7 +8,11 @@
     <h4>Airports</h4>
 </div>
 
-<div id="map" style="height: 500px;"></div>
+<div class="row">
+    <div class="col-md-8" id="map" style="height: 500px;"></div>
+    <div class="col-md-4" id="chartContainer"></div>
+</div>
+
 <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/css/atlas.min.css?api-version=2.0" />
 <script src="https://atlas.microsoft.com/sdk/js/atlas.min.js?api-version=2.0"></script>
 <script>
@@ -38,6 +42,37 @@
                 position: [item.Longitude, item.Latitude],
             })
             map.markers.add(marker);
+            map.events.add('click', marker, () => {
+                window.location.href = "/Airport/ShowAirportDetails?airportID=" + item.id
+            });
         }
     })
 </script>
+
+<div class="col-md-4" id="chartContainer"></div>
+<script>
+    window.onload = function () {
+        var chart1 = new CanvasJS.Chart("chartContainer", {
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            exportEnabled: true,
+            animationEnabled: true,
+            title: {
+                text: "Number of Flights by Airline",
+        fontSize: 21
+                 },
+    data: [{
+        type: "doughnut",
+        startAngle: 160,
+        click: function (e) { window.location.href = "/Airline/ShowFLightsForAirline?airlineID=" + e.dataPoint.id
+    },
+        toolTipContent: "<b>{label}</b>: {y}",
+        indexLabel: "{label} - {y}",
+        dataPoints: @Html.Raw(ViewBag.airlineDataPoints)
+                 }]
+             });
+    chart1.render();
+         }
+</script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>

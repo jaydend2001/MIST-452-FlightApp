@@ -135,8 +135,7 @@ namespace SP24MVCDonham.Controllers
             {
                 ModelState.AddModelError("Duplicate", "This record appears to be a duplicate! There is already a " +
                   "flight on this plane that is leaving at this time. Flight ID: " + existingFlights.Where(f =>
-                  f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime ==
-                  viewModel.DepartureDateTime.Value).FirstOrDefault().FlightID);
+                  f.PlaneID == viewModel.PlaneID.Value && f.DepartureDateTime == viewModel.DepartureDateTime.Value).FirstOrDefault().FlightID);
             }
             if (ModelState.IsValid) 
             {

@@ -21,8 +21,9 @@ namespace SP24ClassLibraryDonham
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
 
-        [NotMapped]
-        public List<Flight> Flights { get; set; } = new List<Flight>();
+        //[NotMapped]
+        public List<Flight> DepartingFlights { get; set; } = new List<Flight>();
+        public List<Flight> ArrivingFlights { get; set; } = new List<Flight>();
 
         public Airport(string airportName, string? abbreviation = null, int numberOfGates = 0, decimal? lat = null, decimal? lon = null)
         {

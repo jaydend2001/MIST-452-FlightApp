@@ -11,6 +11,7 @@
             <th>Airline ID</th>
             <th>Airline Name</th>
             <th>Stock Ticker</th>
+            <th>Flights</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,13 @@
                 <td>@eachAirline.AirlineID</td>
                 <td>@eachAirline.AirlineName</td>
                 <td>@eachAirline.StockTicker</td>
+                <td>
+                    <a asp-controller="Airline" asp-action="ShowFlightsForAirline"
+                        asp-route-airlineID="@eachAirline.AirlineID"
+                       class="btn btn-primary @(eachAirline.Planes.Sum(p => p.Flights.Count()) == 0 ? "disabled" : "")">
+                        @eachAirline.Planes.Sum(p => p.Flights.Count())
+                    </a>
+                </td>
             </tr>
         }
     </tbody>

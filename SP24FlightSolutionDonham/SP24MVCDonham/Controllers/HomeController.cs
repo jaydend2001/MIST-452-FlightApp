@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Models;
 using System.Diagnostics;
+using static SP24MVCDonham.Models.Chart;
 
 namespace SP24MVCDonham.Controllers
 {
@@ -11,11 +12,13 @@ namespace SP24MVCDonham.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private IAirportRepo iAirportRepo;
+        private IAirlineRepo iAirlineRepo;
 
-        public HomeController(ILogger<HomeController> logger, IAirportRepo airportRepo)
+        public HomeController(ILogger<HomeController> logger, IAirportRepo airportRepo, IAirlineRepo airlineRepo)
         {
             _logger = logger;
             this.iAirportRepo = airportRepo;
+            this.iAirlineRepo = airlineRepo;
         }
 
         public IActionResult Index()
@@ -43,6 +46,21 @@ namespace SP24MVCDonham.Controllers
                 }
             }// end foreach
             ViewData["mapMarkers"] =  JsonConvert.SerializeObject(mapMarkers);
+
+            //CHART
+            //Get all airlines
+            List<Airline> airlines = this.iAirlineRepo.ListAllAirlines();
+
+            //foreach airline create a data point
+            List<DataPoint> dataPoints = new List<DataPoint>();
+            foreach(Airline airline in airlines)
+            {
+                dataPoints.Add(new DataPoint(airline.AirlineName, airline.Planes.Sum(p => p.Flights.Count()), airline.AirlineID));
+            }
+            ViewData["airlineDataPoints"] = JsonConvert.SerializeObject(dataPoints);
+
+            //YAML
+            //YAML Aint Markup Language
 
             return View();
         }
