@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Models;
+using SP24MVCDonham.ViewModels;
 using System.Diagnostics;
 using static SP24MVCDonham.Models.Chart;
 
@@ -21,7 +23,7 @@ namespace SP24MVCDonham.Controllers
             this.iAirlineRepo = airlineRepo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(HomeViewModel viewModel)
         {
             //Get airports from DB and send to the view
             List<Airport> allAirports = this.iAirportRepo.ListAllAirports();
@@ -53,16 +55,40 @@ namespace SP24MVCDonham.Controllers
 
             //foreach airline create a data point
             List<DataPoint> dataPoints = new List<DataPoint>();
+            List<int> years = new List<int>();
             foreach(Airline airline in airlines)
             {
-                dataPoints.Add(new DataPoint(airline.AirlineName, airline.Planes.Sum(p => p.Flights.Count()), airline.AirlineID));
+                int count = 0;
+                if (viewModel.Years != null && viewModel.Years.Count() > 0)
+                {
+                    count = airline.Planes.Sum(p => p.Flights.Where(f => viewModel.Years.Contains(f.DepartureDateTime.Year)).Count());
+                }
+                else
+                {
+                        count = airline.Planes.Sum(p => p.Flights.Count());
+                }
+                if (count > 0)
+                {
+                    dataPoints.Add(new DataPoint(airline.AirlineName, count, airline.AirlineID));
+                }
+                foreach(Plane plane in airline.Planes)
+                {
+                    foreach(Flight flight in plane.Flights)
+                    {
+                        if (!years.Contains(flight.DepartureDateTime.Year))
+                        {
+                            years.Add(flight.DepartureDateTime.Year);
+                        }
+                    }
+                }
             }
+            ViewData["Years"] = new SelectList(years);
             ViewData["airlineDataPoints"] = JsonConvert.SerializeObject(dataPoints);
 
             //YAML
             //YAML Aint Markup Language
 
-            return View();
+            return View(viewModel);
         }
 
         public IActionResult Privacy()

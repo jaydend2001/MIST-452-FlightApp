@@ -14,6 +14,12 @@ namespace SP24MVCDonham.Models
             this.database = dbContext;
         }
 
+        public void AddAirline(Airline airline)
+        {
+            this.database.Airlines.Add(airline);
+            this.database.SaveChanges();
+        }
+
         public Airline FindAirline(int airlineID)
         {
             return this.database.Airlines.Include(airlineID => airlineID.Planes).ThenInclude(p => p.Flights).Where(a => a.AirlineID == airlineID).FirstOrDefault();

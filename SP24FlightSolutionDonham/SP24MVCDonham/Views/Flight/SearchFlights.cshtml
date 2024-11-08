@@ -10,7 +10,8 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">Departure Airport</label>
-                <select class="form-control" asp-for="DepartureAirportID" asp-items="ViewBag.AllAirports" >
+                <select class="selectpicker form-control show-menu-arrow" data-live-search="true" title="Select Airport"
+                        asp-for="DepartureAirportID" asp-items="ViewBag.AllAirports">
                 <option value=null>None Selected</option>
                 </select>
             </div>
@@ -18,7 +19,8 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label class="control-label">Arrival Airport</label>
-                <select class="form-control" asp-for="ArrivalAirportID" asp-items="ViewBag.AllAirports" >
+                <select class="selectpicker form-control show-menu-arrow" data-live-search="true" title="Select Airport"
+                        asp-for="ArrivalAirportID" asp-items="ViewBag.AllAirports">
                 <option value=null>None Selected</option>
                 </select>
             </div>
@@ -26,7 +28,8 @@
         <div class="col-md-2">
             <div class="form-group">
                 <label class="control-label">Airline</label>
-                <select class="form-control" asp-for="AirlineID" asp-items="ViewBag.AllAirlines">
+                <select class="selectpicker form-control show-menu-arrow" data-live-search="true" title="Select Airline"
+                        asp-for="AirlineID" asp-items="ViewBag.AllAirlines">
                     <option value=null>None Selected</option>
                 </select>
             </div>
@@ -34,8 +37,9 @@
         <div class="col-md-2">
             <div class="form-group">
                 <label class="control-label">Flight Status</label>
-                <select class="form-control" asp-for="FlightStatus" 
-                asp-items="Html.GetEnumSelectList<FlightStatus>()">
+                <select class="selectpicker form-control show-menu-arrow" data-live-search="true" title="Select Flight Status"
+                        asp-for="FlightStatus"
+                        asp-items="Html.GetEnumSelectList<FlightStatus>()">
                     <option value=null>None Selected</option>
                 </select>
             </div>
@@ -108,7 +112,13 @@
                     <tr>
                         <td>@flight.FlightID</td>
                         <td>@flight.FlightStatus</td>
-                        <td>@flight.Plane.Airline.AirlineName</td>
+                        <td>
+                            @if(flight.Plane.Airline.LogoBase64 != null)
+                            {
+                                <img src="@flight.Plane.Airline.LogoBase64" height="75px" width="75px" />
+                            }
+                            @flight.Plane.Airline.AirlineName
+                        </td>
                         <td>@flight.DepartureAirport.AirportName</td>
                         <td>@flight.ArrivalAirport.AirportName</td>
                         <td>@flight.DepartureDateTime.</td>

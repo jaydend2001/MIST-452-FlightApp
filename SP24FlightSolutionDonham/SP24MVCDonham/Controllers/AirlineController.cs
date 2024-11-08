@@ -2,6 +2,7 @@
 using SP24ClassLibraryDonham;
 using SP24MVCDonham.Data;
 using SP24MVCDonham.Models;
+using SP24MVCDonham.ViewModels;
 
 namespace SP24MVCDonham.Controllers
 {
@@ -42,6 +43,38 @@ namespace SP24MVCDonham.Controllers
         public IActionResult ShowFlightsForAirline(int airlineID)
         {
             return View(this.iAirlineRepo.FindAirline(airlineID));
+        }
+
+        [HttpGet]
+        public IActionResult AddAirline()
+        {
+            AirlineViewModel viewModel = new AirlineViewModel();
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult AddAirline(AirlineViewModel viewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                //ADD AIRLINE
+                Airline airline = new Airline(viewModel.AirlineName, viewModel.StockTicker);
+                if (viewModel.Logo != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        viewModel.Logo.CopyTo(memoryStream);
+                        airline.LogoBytes = memoryStream.ToArray();
+                    }
+                }
+                this.iAirlineRepo.AddAirline(airline);
+                return RedirectToAction("ListAllAirlines");
+            }
+            else
+            {
+                //ERROR
+                return View(viewModel);
+            }
         }
     }
 }

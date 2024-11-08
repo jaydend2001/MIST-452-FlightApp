@@ -1,0 +1,25 @@
+﻿@model AirlineViewModel
+@{
+    ViewData["Title"] = "Add Airline";
+}
+
+<h1>New Airline</h1>
+
+<form asp-controller="Airline" asp-action="AddAirline" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label class="form-label">Airline Name</label>
+        <input class="form-control" asp-for="AirlineName" />
+    </div>
+    <div class="form-group">
+        <label class="form-label">Stock Ticker</label>
+        <input class="form-control" asp-for="StockTicker" />
+    </div>
+    <div class="form-group">
+        <label class="form-label">Logo</label>
+        <input class="form-control" type="file" asp-for="Logo" accept="image/*" />
+    </div>
+    <br />
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Add Airline</button>
+    </div>
+</form>

@@ -5,10 +5,11 @@
 
 <h1>ListAllAirlines</h1>
 
-<table class="table table-bordered table-striped">
+<table id="dataTable" class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>Airline ID</th>
+            <th>Logo</th>
             <th>Airline Name</th>
             <th>Stock Ticker</th>
             <th>Flights</th>
@@ -19,6 +20,12 @@
         {
             <tr>
                 <td>@eachAirline.AirlineID</td>
+                <td>
+                    @if (eachAirline.LogoBase64 != null)
+                    {
+                        <img src="@eachAirline.LogoBase64" height="100px" width="150px" />
+                    }
+                </td>
                 <td>@eachAirline.AirlineName</td>
                 <td>@eachAirline.StockTicker</td>
                 <td>

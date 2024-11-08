@@ -16,6 +16,25 @@ namespace SP24ClassLibraryDonham
         public string AirlineName { get; set; }
         public string? StockTicker { get; set; }
 
+        //LOGO
+        public byte[]? LogoBytes { get; set; }
+        public string? LogoBase64
+        {
+            get
+            {
+                if(this.LogoBytes != null)
+                {
+                    string base64String = Convert.ToBase64String
+                        (this.LogoBytes);
+                    return $"data:image/png;base64,{base64String}";
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         //MANY
         //Not saved in DB
         //[NotMapped]

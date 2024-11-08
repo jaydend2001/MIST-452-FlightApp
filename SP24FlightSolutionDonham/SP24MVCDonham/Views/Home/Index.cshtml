@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -10,7 +11,22 @@
 
 <div class="row">
     <div class="col-md-8" id="map" style="height: 500px;"></div>
-    <div class="col-md-4" id="chartContainer"></div>
+    <div class="col-md-4">
+        <div>
+            <form asp-controller="Home" asp-action="Index">
+                <div class="form-group">
+                    <label class="form-label">Search By Years</label>
+                    <select asp-for="Years" onchange="this.form.submit()" multiple
+                        class="selectpicker form-control show-menu-arrow" data-ng-style="btn-outline-primary"
+                        title="Select Year(s)" data-live-search="true" data-select-text-format="count > 3"
+                        data-actions-box="true" asp-items="@ViewBag.Years">
+                    
+                </select>
+                </div>
+            </form>
+        </div>
+        <div id="chartContainer"></div>
+    </div>
 </div>
 
 <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/css/atlas.min.css?api-version=2.0" />
